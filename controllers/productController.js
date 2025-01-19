@@ -15,8 +15,8 @@ exports.getAllProducts = async (req, res) => {
 exports.createProduct = async (req, res) => {
   try {
     const { name, price, description, category } = req.body;
-    const image = req.file ? req.file.path : null;
-    console.log("Uploaded file path:", req.file.path);
+    const image = req.file ? req.file.filename : null;
+    console.log("Uploaded file path:", req.filename);
 
     const product = new Product({ name, price, description, category, image });
     await product.save();
