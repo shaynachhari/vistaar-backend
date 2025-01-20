@@ -30,7 +30,7 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      {userId: user.userId, role: user.role },
       process.env.JWT_SECRET,
       {
         expiresIn: "1h",
@@ -59,11 +59,13 @@ exports.googleAuth = async (req, res) => {
     
     if (!user) {
       console.log("User not found:", googleRes.email);
-      user = new User({ name: googleRes.name, email:googleRes.email, role: "user", googleId: googleRes.sub });
+      user = new User({  name: googleRes.name,  email: googleRes.email,  role: "user",  googleId: googleRes.sub,
+        userId: uuidv4(),
+      });
       await user.save();
     }
     const jwtToken = jwt.sign(
-      { googleId: user.googleId, role: user.role },
+      { userId: user.userId, role: user.role },
       process.env.JWT_SECRET,
       {
         expiresIn: "1h",
