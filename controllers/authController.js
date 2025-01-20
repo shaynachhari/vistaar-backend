@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { v4: uuidv4 } = require('uuid');
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_OAUTH_CLIENT_ID);
 
@@ -30,7 +31,7 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
     const token = jwt.sign(
-      {userId: user.userId, role: user.role },
+      {userId: user.userId, role: user.role ,name: user.name},
       process.env.JWT_SECRET,
       {
         expiresIn: "1h",
@@ -65,7 +66,7 @@ exports.googleAuth = async (req, res) => {
       await user.save();
     }
     const jwtToken = jwt.sign(
-      { userId: user.userId, role: user.role },
+      { userId: user.userId, role: user.role, name: user.name },
       process.env.JWT_SECRET,
       {
         expiresIn: "1h",
